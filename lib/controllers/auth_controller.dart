@@ -1,7 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:assign_app/models/user_model.dart';
 import 'dart:convert';
+
+import '../models/user_models.dart';
 
 class AuthController {
   final String registerUrl = 'http://13.127.246.196:8000/api/registers/';

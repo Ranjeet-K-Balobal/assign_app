@@ -1,9 +1,13 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
-import 'views/home_screen.dart';
-import 'views/register_screen.dart';
-import 'package:assign_app/views/login_screen.dart';
-import 'controllers/auth_controller.dart'; // Adjust this as needed
-import 'package:assign_app/models/user_model.dart';
+import 'package:provider/provider.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/register_screen.dart';
+import 'screens/splash_screen.dart';
+import 'controllers/splash_controller.dart'; // Import the SplashController
+
 void main() {
   runApp(MyApp());
 }
@@ -11,16 +15,24 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => SplashController()), // Provide SplashController
+        // Add other providers here if needed
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: SplashScreen(), // Start with SplashScreen
+        routes: {
+          '/login': (context) => LoginScreen(),
+          '/home': (context) => HomeScreen(),
+          '/register': (context) => RegisterScreen(),
+        },
+        debugShowCheckedModeBanner: false,
       ),
-      home: RegisterScreen(), // Adjust this as needed
-      routes: {
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => HomeScreen(),
-      },
     );
   }
 }
