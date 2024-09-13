@@ -163,8 +163,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         children: [
           Text('Contact Information', style: Theme.of(context).textTheme.titleLarge),
           SizedBox(height: 10),
-          _buildTextField('Phone Number', _phoneNumberController, prefixText: '+91 '),
-          _buildTextField('WhatsApp Number', _whatsappNumberController, prefixText: '+91 '),
+          _buildTextField('Phone Number', _phoneNumberController),
+          _buildTextField('WhatsApp Number', _whatsappNumberController),
         ],
       ),
     );
@@ -261,8 +261,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Future<void> _register() async {
-    if (_formKey.currentState?.validate() ?? false) {
+Future<void> _register() async {
+  if (_formKey.currentState?.validate() ?? false) {
+    try {
       final response = await http.post(
         Uri.parse('http://13.127.246.196:8000/api/registers/'),
         headers: {
@@ -286,18 +287,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }),
       );
 
-      final responseBody = jsonDecode(response.body);
-
       if (response.statusCode == 201) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration successful!')),
         );
         Navigator.pop(context);
       } else {
+        final responseBody = jsonDecode(response.body);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${responseBody['error']}')),
         );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
+      );
     }
   }
+}
 }
